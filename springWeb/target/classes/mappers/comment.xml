@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.kitri.app1.comment.Dao">
+
+	<resultMap type="com.kitri.app1.comment.Comment" id="commentResult">
+		<result column="comment_num" property="comment_num"/>
+		<result column="article_num" property="article_num"/>
+		<result column="writer" property="writer"/>
+		<result column="content" property="content"/>
+		<result column="w_date" property="w_date"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.kitri.app1.comment.Comment">
+		insert into and_comment 
+		values(seq_and_comment.nextval,
+			  #{article_num}, #{writer}, 
+			  #{content}, sysdate)
+	</insert>
+	
+	<select id="selectAll" parameterType="int" resultMap="commentResult">
+		select * from and_comment 
+		where article_num = #{article_num}
+		order by w_date asc
+	</select>
+	
+	<update id="update" parameterType="com.kitri.app1.comment.Comment">
+		update and_comment set content=#{content} 
+		where comment_num=#{comment_num}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete and_comment where comment_num=#{comment_num}
+	</delete>
+
+</mapper>

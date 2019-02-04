@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.kitri.app1.imgBoardRep.Dao">
+
+	<resultMap type="com.kitri.app1.imgBoardRep.ImgBoardRep" id="imgBoardRepResult">
+		<result column="num" property="num"/>
+		<result column="img_num" property="img_num"/>
+		<result column="writer" property="writer"/>
+		<result column="content" property="content"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.kitri.app1.imgBoardRep.ImgBoardRep">
+		insert into img_board_rep values(seq_img_board_rep.nextval,
+			  							 #{img_num}, #{writer}, #{content})
+	</insert>
+	
+	<select id="selectAll" parameterType="int" resultMap="imgBoardRepResult">
+		select * from img_board_rep 
+		where img_num = #{img_num}
+		order by num
+	</select>
+	
+	<update id="update" parameterType="com.kitri.app1.imgBoardRep.ImgBoardRep">
+		update img_board_rep set content=#{content} 
+		where num=#{num}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete img_board_rep where num=#{num}
+	</delete>
+
+</mapper>

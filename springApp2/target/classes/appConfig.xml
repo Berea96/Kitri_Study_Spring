@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+	
+	<bean name="t" class="test1.Test"/>
+	
+	<!-- <bean name="t2" class="test1.Test">
+		<constructor-arg>
+			<value>하이</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean name="t3" class="test1.Test">
+		<constructor-arg>
+			<value type="int">123</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean name="t4" class="test1.Test">
+		<constructor-arg>
+			<value>하이</value>
+		</constructor-arg>
+		<constructor-arg value="123"/>
+	</bean> -->
+	
+	<bean id="test2" class="test1.Test2">
+		<property name="t1">
+			<ref bean="t"/>
+		</property>
+		<property name="val" value="456"/>
+		<property name="str">
+			<value>바이</value>
+		</property>
+	</bean>
+	
+	<bean name="testp" class="test1.Test2" p:t1-ref="t" p:val="456" p:str="하하"/>
+	
+	<bean name="oracle" class="test2.DBConn">
+		<constructor-arg value="Oracle"/>
+	</bean>
+	
+	<!-- <bean name="mysql" class="test2.DBConn">
+		<constructor-arg value="MySql"/>
+	</bean> -->
+	
+	<bean name="oracleDao" class="test2.DaoImplOracle" p:db-ref="oracle"/>
+	
+	<!-- <bean name="mysqlDao" class="test2.DaoImplMySql" p:dao-ref="mysql"/> -->
+	
+	<!-- <bean name="schoolA" class="test2.ServiceImplSchoolA" p:dao-ref="oracleDao"/> -->
+	
+	<bean name="schoolB" class="test2.ServiceImplSchoolB" p:dao-ref="oracleDao"/>
+	
+	<!-- <bean name="menuA" class="test2.Menu" p:service-ref="schoolA"/> -->
+	
+	<bean name="menuB" class="test2.Menu" p:service-ref="schoolB"/>
+	
+	<bean id="adviceTest" class="myAdvice.AdviceTest"/>
+	
+	<bean id="performanceTraceAdvice" class="myAdvice.ProfilingAdvice"/>
+	
+	<aop:config>
+		<aop:aspect id="traceAspect1" ref="performanceTraceAdvice">
+			<aop:pointcut id="publicMethod" 
+			expression="execution(public * myAdvice.AdviceTest.*(..))"/>
+			<aop:around pointcut-ref="publicMethod" method="trace"/>
+		</aop:aspect>
+		
+		<aop:aspect id="traceAspect2" ref="performanceTraceAdvice">
+			<aop:pointcut id="returning"
+			expression="execution(public * myAdvice.AdviceTest.*(..))"/>
+			<aop:after-returning pointcut-ref="returning" 
+					method="printStr" returning="ret"/>
+		</aop:aspect>
+		
+		<aop:aspect id="traceAspect3" ref="performanceTraceAdvice">
+			<aop:pointcut id="good"
+			expression="execution(public * test2.*.*(..))"/>
+			<aop:around pointcut-ref="good" method="trace"/>
+		</aop:aspect>
+	</aop:config>
+	
+</beans>

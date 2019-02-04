@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.kitri.app1.imgBoard.Dao">
+
+	<resultMap type="com.kitri.app1.imgBoard.ImgBoard" id="imgBoardResult">
+		<result column="num" property="num"/>
+		<result column="writer" property="writer"/>
+		<result column="title" property="title"/>
+		<result column="w_date" property="w_date"/>
+		<result column="content" property="content"/>
+		<result column="img_path" property="img_path"/>
+	</resultMap>
+	
+	<select id="getNum" resultType="int">
+		select seq_img_board.nextval from dual
+	</select>
+	
+	<insert id="insert" parameterType="com.kitri.app1.imgBoard.ImgBoard">
+		insert into img_board values(${num}, #{writer}, #{title}, 
+									 sysdate, #{content}, #{img_path})
+	</insert>
+	
+	<select id="selectAll" resultMap="imgBoardResult">
+		select * from img_board order by num
+	</select>
+	
+	<select id="selectByWriter" parameterType="String" resultMap="imgBoardResult">
+		select * from img_board where writer=#{writer} order by num
+	</select>
+	
+	<select id="selectByNum" parameterType="int" resultMap="imgBoardResult">
+		select * from img_board where num=#{num}
+	</select>
+	
+	<update id="update" parameterType="com.kitri.app1.imgBoard.ImgBoard">
+		update img_board set title=#{title}, content=#{content}, w_date=sysdate
+		where num=#{num}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete img_board where num=#{num}
+	</delete>
+
+</mapper>
